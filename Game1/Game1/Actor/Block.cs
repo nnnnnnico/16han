@@ -12,28 +12,24 @@ namespace Game1.Actor
     {
 
         public Block(Vector2 positon,GameDevice gameDevice)
-            : base("", positon, 32, 32)
+            : base("Block", positon, 64, 64)
         {
         }
 
         public override void Hit(Character other)
         {
-            throw new NotImplementedException();
         }
 
         public override void Initialize()
         {
-            throw new NotImplementedException();
         }
 
         public override void Shutdown()
         {
-            throw new NotImplementedException();
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
         }
     }
 }

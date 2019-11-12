@@ -44,6 +44,7 @@
     <Compile Include="Actor\Block.cs" />
     <Compile Include="Actor\Boss.cs" />
     <Compile Include="Actor\Character.cs" />
+    <Compile Include="Actor\CharacterManager.cs" />
     <Compile Include="Actor\Map.cs" />
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\Space.cs" />

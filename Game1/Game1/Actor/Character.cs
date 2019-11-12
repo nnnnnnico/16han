@@ -12,6 +12,11 @@ using Game1.Scene;
 namespace Game1.Actor
 {
 
+    enum Direction
+    {
+        //上、下、　左、　右
+        Top, Bottom, Left, Right
+    };
 
     abstract class Character
     {
@@ -77,6 +82,30 @@ namespace Game1.Actor
         //    }
         //    return false;
         //}
+
+        public Direction CheckDirection(Character otherObj)
+        {
+            Point thisCenter = this.GetRectangle().Center;
+            Point otherCenter = otherObj.GetRectangle().Center;
+
+            Vector2 dir = new Vector2(thisCenter.X, thisCenter.Y) - new Vector2(otherCenter.X, otherCenter.Y);
+
+            if (Math.Abs(dir.X) > Math.Abs(dir.Y))
+            {
+                if (dir.X > 0)
+                {
+                    return Direction.Right;
+                }
+                return Direction.Left;
+            }
+
+            if (dir.Y > 0)
+            {
+                return Direction.Bottom;
+            }
+            return Direction.Top;
+        }
+
         public void SetPosition(ref Vector2 other)
         {
             other = position;

@@ -126,7 +126,6 @@ namespace Game1.Scene
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
         }
 
         public bool IsEnd()

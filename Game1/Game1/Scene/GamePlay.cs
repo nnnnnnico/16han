@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Game1.Actor;
 using Game1.Device;
 using Microsoft.Xna.Framework;
 
@@ -10,34 +11,51 @@ namespace Game1.Scene
 {
     class GamePlay : IScene
     {
+        private bool isEndFlag;
+        private Map map;
+        private Player player;  
+
+        public GamePlay()
+        {
+            isEndFlag = false;
+        }
+
         public void Draw(Renderer renderer)
         {
-            throw new NotImplementedException();
+            renderer.Begin();
+            map.Draw(renderer);
+            player.Draw(renderer);
+            renderer.End();
         }
 
         public void Initialize()
         {
-            throw new NotImplementedException();
+            isEndFlag = false;
+
+            map = new Map(GameDevice.Instance());
+            //map.Load("map.csv","./csv/");
+
+            player = new Player(new Vector2(200, 200), GameDevice.Instance());
+
         }
 
         public bool IsEnd()
         {
-            throw new NotImplementedException();
+            return isEndFlag;
         }
 
         public SceneName Next()
         {
-            throw new NotImplementedException();
+            return SceneName.GameEnding;
         }
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
         }
 
         public void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            map.Update(gameTime);
         }
     }
 }
