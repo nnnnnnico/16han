@@ -3,6 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Game1.Def;
+using Game1.Device;
+using Game1.Scene;
+
+
 /// <summary>
 /// プロジェクト名がnamespaceとなります
 /// </summary>
@@ -17,6 +22,10 @@ namespace Game1
         // フィールド（このクラスの情報を記述）
         private GraphicsDeviceManager graphicsDeviceManager;//グラフィックスデバイスを管理するオブジェクト
         private SpriteBatch spriteBatch;//画像をスクリーン上に描画するためのオブジェクト
+        private Renderer renderer;
+        private GameDevice gameDevice;
+        private SceneManager sceneManager;
+
 
         /// <summary>
         /// コンストラクタ
@@ -28,6 +37,9 @@ namespace Game1
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             //コンテンツデータ（リソースデータ）のルートフォルダは"Contentに設定
             Content.RootDirectory = "Content";
+
+            graphicsDeviceManager.PreferredBackBufferWidth = Screen.Width;
+            graphicsDeviceManager.PreferredBackBufferHeight = Screen.Height;
         }
 
         /// <summary>
@@ -37,7 +49,29 @@ namespace Game1
         {
             // この下にロジックを記述
 
+            //ゲームデバイスの実体を取得
+            gameDevice = GameDevice.Instance(Content, GraphicsDevice);
 
+            //シーン管理生成
+            sceneManager = new SceneManager();
+
+
+            //sceneManager.Add(Scene.SceneName.LoadScene, new LoadScene());
+            sceneManager.Add(Scene.SceneName.GameTitle, new GameTitle());
+            sceneManager.Add(Scene.SceneName.GamePlay, new GamePlay());
+            sceneManager.Add(Scene.SceneName.GameEnding, new GameEnding());
+
+            //最初のシーンに変更
+            sceneManager.Change(Scene.SceneName.LoadScene);
+
+            //CSVReader csvReader = new CSVReader();
+            //csvReader.Read("map.csv");
+
+            #region ゴリラ
+            //map = new Map(gameDevice);
+            //map.Load("map.csv");
+            //gameObjectManager.Add(map);
+            #endregion
 
             // この上にロジックを記述
             base.Initialize();// 親クラスの初期化処理呼び出し。絶対に消すな！！
@@ -53,6 +87,7 @@ namespace Game1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // この下にロジックを記述
+            renderer = gameDevice.GetRenderer();
 
 
             // この上にロジックを記述
@@ -85,6 +120,9 @@ namespace Game1
             }
 
             // この下に更新ロジックを記述
+            gameDevice.Update(gameTime);
+
+            //sceneManager.Update(gameTime);
 
             // この上にロジックを記述
             base.Update(gameTime); // 親クラスの更新処理呼び出し。絶対に消すな！！
@@ -101,6 +139,7 @@ namespace Game1
 
             // この下に描画ロジックを記述
 
+            //sceneManager.Draw(renderer);
 
             //この上にロジックを記述
             base.Draw(gameTime); // 親クラスの更新処理呼び出し。絶対に消すな！！
