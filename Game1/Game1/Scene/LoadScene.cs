@@ -64,13 +64,6 @@ namespace Game1.Scene
             string[,] data = new string[,]
             {
                 //ここから下追加
-                {"VoLoN BGM",path},
-                {"VoLoN BGM2",path},
-                {"ぐらび",path},
-                {"クリティカル",path},
-                {"シーン遷移",path},
-                {"とげ",path},
-                {"当たったとき",path},
                 //ここから上追加
             };
 
