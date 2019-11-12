@@ -43,6 +43,8 @@ namespace Game1.Scene
             // 読み込み対象データ
             string[,] data = new string[,]
             {
+                {"Boss()",path },
+                {"TankRight",path },
             };
 
             return data;
