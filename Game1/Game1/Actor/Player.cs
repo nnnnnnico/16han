@@ -48,7 +48,7 @@ namespace Game1.Actor
         {
             float speed = 4.0f;
 
-            velocity.X = Input.Velocity().X * speed;
+            velocity = Input.Velocity() * speed;
 
             //位置の計算
             position = position + velocity;
