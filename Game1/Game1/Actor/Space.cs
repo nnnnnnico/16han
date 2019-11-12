@@ -3,23 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Game1.Def;
 using Game1.Device;
-using Game1.Scene;
-using Game1.Util;
-using Game1.Static;
-
+using Microsoft.Xna.Framework;
 
 namespace Game1.Actor
 {
-    class Player : Character
+    class Space : Character
     {
 
-        public Player(Vector2 position,GameDevice gameDevice)
-            :base("",position,64,64)
+        public Space(Vector2 position,GameDevice gameDevice)
+            : base("", position, 32, 32)
         {
 
         }

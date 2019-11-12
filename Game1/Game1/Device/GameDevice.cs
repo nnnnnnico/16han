@@ -44,6 +44,7 @@ namespace Game1.Device
             random = new Random();
             this.content = content;
             this.graphics = graphics;
+            displayModify = new Vector2(0, 0);
         }
 
         /// <summary>

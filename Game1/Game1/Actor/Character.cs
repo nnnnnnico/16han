@@ -22,15 +22,36 @@ namespace Game1.Actor
         protected int width;//幅
         protected int height;//高さ
 
-        public Character(string name, int width, int height)
+        public Character(string name,Vector2 position, int width, int height)
         {
             this.name = name;
-            position = Vector2.Zero;
+            this.position = position;
             isDeadFlag = false;
             this.mediator = mediator;
             this.width = width;
             this.height = height;
         }
+
+        public int GetWidth()
+        {
+            return width;
+        }
+
+        public int GetHeight()
+        {
+            return height;
+        }
+
+        public void SetPosition(Vector2 position)
+        {
+            this.position = position;
+        }
+
+        public Vector2 GetPosition()
+        {
+            return position;
+        }
+
         public abstract void Initialize();
         public abstract void Update(GameTime gameTime);
         public abstract void Shutdown();

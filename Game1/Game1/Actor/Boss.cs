@@ -16,8 +16,8 @@ namespace Game1.Actor
 {
     class Boss : Character
     {
-        public Boss()
-            : base("", 128, 128)
+        public Boss(Vector2 position,GameDevice gameDevice)
+            : base("",position ,128, 128)
         {
 
         }
