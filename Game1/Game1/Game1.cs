@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Game1.Def;
 using Game1.Device;
 using Game1.Scene;
-
+using Game1.Actor;
 
 /// <summary>
 /// プロジェクト名がnamespaceとなります
@@ -25,6 +25,7 @@ namespace Game1
         private Renderer renderer;
         private GameDevice gameDevice;
         private SceneManager sceneManager;
+        private Player player;
 
 
         /// <summary>
@@ -49,8 +50,11 @@ namespace Game1
         {
             // この下にロジックを記述
 
+
             //ゲームデバイスの実体を取得
             gameDevice = GameDevice.Instance(Content, GraphicsDevice);
+
+            //player = new Player(new Vector2(100, 100), gameDevice);
 
             //シーン管理生成
             sceneManager = new SceneManager();
@@ -121,8 +125,8 @@ namespace Game1
 
             // この下に更新ロジックを記述
             gameDevice.Update(gameTime);
-
-            //sceneManager.Update(gameTime);
+            //player.Update(gameTime);
+            sceneManager.Update(gameTime);
 
             // この上にロジックを記述
             base.Update(gameTime); // 親クラスの更新処理呼び出し。絶対に消すな！！
@@ -139,7 +143,10 @@ namespace Game1
 
             // この下に描画ロジックを記述
 
-            //sceneManager.Draw(renderer);
+            //renderer.Begin();
+            sceneManager.Draw(renderer);
+            //player.Draw(renderer);
+            //renderer.End();
 
             //この上にロジックを記述
             base.Draw(gameTime); // 親クラスの更新処理呼び出し。絶対に消すな！！

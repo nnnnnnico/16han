@@ -17,31 +17,41 @@ namespace Game1.Actor
 {
     class Player : Character
     {
+        Vector2 velocity;
+
+
 
         public Player(Vector2 position,GameDevice gameDevice)
-            :base("",position,64,64)
+            :base("TankRight",position,64,64)
         {
+            position = new Vector2(100, 100);
+            velocity = Vector2.Zero;
 
         }
 
         public override void Hit(Character other)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void Initialize()
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Shutdown()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            float speed = 4.0f;
+
+            velocity.X = Input.Velocity().X * speed;
+
+            //位置の計算
+            position = position + velocity;
         }
     }
 }
