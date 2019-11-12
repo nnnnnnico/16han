@@ -26,11 +26,13 @@ namespace Game1.Actor
         protected IGameMediator mediator;
         protected int width;//幅
         protected int height;//高さ
+        protected GameDevice gameDevice;
 
-        public Character(string name,Vector2 position, int width, int height)
+        public Character(string name,Vector2 position, int width, int height,GameDevice gameDevice)
         {
             this.name = name;
             this.position = position;
+            this.gameDevice = gameDevice;
             isDeadFlag = false;
             this.mediator = mediator;
             this.width = width;
@@ -57,6 +59,7 @@ namespace Game1.Actor
             return position;
         }
 
+        public abstract object Clone();
         public abstract void Initialize();
         public abstract void Update(GameTime gameTime);
         public abstract void Shutdown();

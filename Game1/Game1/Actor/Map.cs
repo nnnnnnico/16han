@@ -41,7 +41,7 @@ namespace Game1.Actor
                 try
                 {
                     //ディクショナリから元データを取り出し、クローン機能で複製
-                    Character work = (Character)objectDict[s];
+                    Character work = (Character)objectDict[s].Clone();
                     work.SetPosition(new Vector2(colCnt * work.GetHeight(),
                         lineCnt * work.GetWidth()));
                     workList.Add(work);

@@ -12,9 +12,20 @@ namespace Game1.Actor
     {
 
         public Space(Vector2 position,GameDevice gameDevice)
-            : base("", position, 64, 64)
+            : base("", position, 64, 64,gameDevice)
         {
 
+        }
+
+        public Space(Space other)
+            : this(other.position, other.gameDevice)
+        {
+
+        }
+
+        public override object Clone()
+        {
+            return new Space(this);
         }
 
         public override void Hit(Character other)
@@ -31,6 +42,11 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
+        }
+
+        public override void Draw(Renderer renderer)
+        {
+           
         }
     }
 }

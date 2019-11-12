@@ -18,12 +18,22 @@ namespace Game1.Actor
     {
         private int count;
         private List<Bullet> bulletList;
-        private GameDevice gameDevice;
         private int Hp;
         public Boss(Vector2 position,GameDevice gameDevice)
-            : base("Boss()",position ,128, 128)
+            : base("Boss()",position ,128, 128,gameDevice)
         {
             bulletList = new List<Bullet>();
+        }
+
+        public Boss(Boss other)
+            : this(other.position, other.gameDevice)
+        {
+
+        }
+
+        public override object Clone()
+        {
+            return new Boss(this);
         }
 
         public override void Hit(Character other)
@@ -39,7 +49,6 @@ namespace Game1.Actor
 
         public override void Shutdown()
         {
-            throw new NotImplementedException();
         }
 
         public override void Update(GameTime gameTime)
@@ -93,5 +102,6 @@ namespace Game1.Actor
             }
             renderer.DrawTexture("Boss()", position);
         }
+
     }
 }

@@ -23,11 +23,22 @@ namespace Game1.Actor
         int hp;
 
         public Player(Vector2 position,GameDevice gameDevice)
-            :base("TankRight",position,64,64)
+            :base("TankRight",position,64,64,gameDevice)
         {
             position = new Vector2(100, 100);
             velocity = Vector2.Zero;
             hp = 10;
+        }
+
+        public Player(Player other)
+            : this(other.position, other.gameDevice)
+        {
+
+        }
+
+        public override object Clone()
+        {
+            return new Player(this);
         }
 
         public override void Hit(Character other)

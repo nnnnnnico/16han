@@ -69,7 +69,7 @@ namespace Game1
 
             CSVReader csvReader = new CSVReader();
             csvReader.Read("map.csv","./csv/");
-
+            
             #region ゴリラ
             //map = new Map(gameDevice);
             //map.Load("map.csv");

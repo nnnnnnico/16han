@@ -12,8 +12,19 @@ namespace Game1.Actor
     {
 
         public Block(Vector2 positon,GameDevice gameDevice)
-            : base("Block", positon, 64, 64)
+            : base("Block", positon, 64, 64,gameDevice)
         {
+        }
+
+        public Block(Block other)
+            :this(other.position,other.gameDevice)
+        {
+
+        }
+
+        public override object Clone()
+        {
+            return new Block(this);
         }
 
         public override void Hit(Character other)

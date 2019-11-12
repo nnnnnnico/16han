@@ -63,10 +63,10 @@ namespace Game1.Scene
 
         public void Update(GameTime gameTime)
         {
-            //if (Input.GetKeyTrigger(Keys.Space))
-            //{
-            //    isEndFlag = true;
-            //}
+            if (Input.GetKeyTrigger(Keys.Space))
+            {
+                isEndFlag = true;
+            }
             player.Update(gameTime);
             boss.Update(gameTime);
             Gauge.Update();

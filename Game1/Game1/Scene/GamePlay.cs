@@ -13,18 +13,20 @@ namespace Game1.Scene
     {
         private bool isEndFlag;
         private Map map;
-        private Player player;  
+        private Player player;
+        private CharacterManager characterManager;
 
         public GamePlay()
         {
             isEndFlag = false;
+            characterManager = new CharacterManager();
         }
 
         public void Draw(Renderer renderer)
         {
             renderer.Begin();
             map.Draw(renderer);
-            player.Draw(renderer);
+            characterManager.Draw(renderer);
             renderer.End();
         }
 
@@ -32,10 +34,15 @@ namespace Game1.Scene
         {
             isEndFlag = false;
 
+            characterManager.Initialize();
+
             map = new Map(GameDevice.Instance());
-            //map.Load("map.csv","./csv/");
+            map.Load("map.csv","./csv/");
 
             player = new Player(new Vector2(200, 200), GameDevice.Instance());
+
+            characterManager.Add(map);
+            characterManager.Add(player);
 
         }
 
@@ -55,6 +62,7 @@ namespace Game1.Scene
 
         public void Update(GameTime gameTime)
         {
+            characterManager.Update(gameTime);
             map.Update(gameTime);
         }
     }
