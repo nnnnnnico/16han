@@ -25,7 +25,9 @@ namespace Game1.Actor
         {
             //コピー元オブジェクト登録用でディクショナリ
             Dictionary<string, Character> objectDict = new Dictionary<string, Character>();
-            //objectDict.Add("0", new Space(Vector2.Zero, gameDevice));
+            objectDict.Add("0", new Space(Vector2.Zero, gameDevice));
+            objectDict.Add("1", new Block(Vector2.Zero, gameDevice));
+
             //スペースは０
 
 
@@ -78,10 +80,10 @@ namespace Game1.Actor
             {
                 foreach (var obj in list)
                 {
-                    //if (obj is Space)
-                    //{
-                    //    continue;
-                    //}
+                    if (obj is Space)
+                    {
+                        continue;
+                    }
                     obj.Update(gameTime);
                 }
             }
@@ -91,8 +93,8 @@ namespace Game1.Actor
         {
             Point work = gameObject.GetRectangle().Location;
 
-            int x = work.X / 32;
-            int y = work.Y / 32;
+            int x = work.X / 64;
+            int y = work.Y / 64;
 
             if (x < 1)
             {

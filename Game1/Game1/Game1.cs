@@ -25,7 +25,6 @@ namespace Game1
         private Renderer renderer;
         private GameDevice gameDevice;
         private SceneManager sceneManager;
-        private Player player;
 
 
         /// <summary>
@@ -68,8 +67,8 @@ namespace Game1
             //最初のシーンに変更
             sceneManager.Change(Scene.SceneName.LoadScene);
 
-            //CSVReader csvReader = new CSVReader();
-            //csvReader.Read("map.csv");
+            CSVReader csvReader = new CSVReader();
+            csvReader.Read("map.csv","./csv/");
 
             #region ゴリラ
             //map = new Map(gameDevice);
