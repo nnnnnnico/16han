@@ -16,20 +16,25 @@ namespace Game1.Actor
 {
     class Boss : Character
     {
+        private int count;
+        private List<Bullet> bulletList;
+        private GameDevice gameDevice;
+        private int Hp;
         public Boss(Vector2 position,GameDevice gameDevice)
-            : base("",position ,128, 128)
+            : base("Boss()",position ,128, 128)
         {
-
+            bulletList = new List<Bullet>();
         }
 
         public override void Hit(Character other)
         {
-            throw new NotImplementedException();
+            Hp = Hp - 2;
         }
 
         public override void Initialize()
         {
-            throw new NotImplementedException();
+            bulletList.Clear();
+            Hp = 100;
         }
 
         public override void Shutdown()
@@ -39,7 +44,54 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            foreach(var bullet in bulletList)
+            {
+                bullet.Update(gameTime);
+            }
+            if (count == 0)
+            {
+                position.X++;
+                Attack1();
+            }
+            if (count == 1)
+            {
+                position.X--;
+                Attack2();
+            }
+            if (count == 2)
+            {
+                Attack3();
+                count = 0;
+            }
+            if (Input.GetKeyTrigger(Keys.X) || Input.GetKeyTrigger(Keys.Z))
+            {
+                count++;
+            }
+            //bulletList.RemoveAll(a => a.IsDead() == true);
+        }
+        //右に弾発射
+        public void Attack1()
+        {
+            bulletList.Add(new Bullet(new Vector2(position.X+128,position.Y+64), gameDevice));
+        }
+        //左に弾を発射
+        public void Attack2()
+        {
+            bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
+        }
+
+        public void Attack3()
+        {
+
+        }
+
+        public override void Draw(Renderer renderer)
+        {
+            foreach(var bullet in bulletList)
+            {
+                bullet.Draw(renderer);
+            }
+            renderer.DrawTexture("Boss()", position);
         }
     }
 }

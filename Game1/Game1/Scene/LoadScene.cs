@@ -46,6 +46,8 @@ namespace Game1.Scene
                 {"Boss()",path },
                 {"TankRight",path },
                 {"Bullet16",path },
+                {"gauge",path },
+                {"pixel",path },
             };
 
             return data;

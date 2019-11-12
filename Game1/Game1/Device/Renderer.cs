@@ -163,6 +163,25 @@ namespace Game1.Device
                 );
         }
 
+        public void DrawTexture(string name,Rectangle rect,Color color)
+        {
+            Debug.Assert(
+                textures.ContainsKey(name),
+                "描画時にアセット名の指定を間違えたか、画像の読み込み自体できていません");
+
+            spriteBatch.Draw(
+                textures[name],         // 画像
+                Vector2.Zero,               // 位置
+                rect,                   // 切り取り範囲
+                color,    // 透過
+                0.0f,                   // 回転
+                Vector2.Zero,           // 回転軸の位置
+                1.0f,                  // 拡大縮小
+                SpriteEffects.None,     // 表示反転効果
+                0.0f                    // スプライト表示深度
+                );
+        }
+
         /// <summary>
         /// 画像の描画（指定範囲）intを指定すれば上下左右反転できる
         /// </summary>

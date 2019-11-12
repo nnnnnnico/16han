@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Game1.Device;
 using Microsoft.Xna.Framework.Input;
 using Game1.Actor;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Game1.Scene
 {
@@ -14,14 +15,20 @@ namespace Game1.Scene
     {
         private bool isEndFlag;
         public Player player;
+        public Boss boss;
         private GameDevice gameDevice;
+        public Gauge Gauge;
+        private int width;
 
         public GameTitle()
         {
             isEndFlag = false;
             gameDevice = GameDevice.Instance();
             player = new Player(new Vector2(100, 100), gameDevice);
-
+            boss = new Boss(new Vector2(400, 400), gameDevice);
+            Rectangle bound = new Rectangle(100, 100, width, 50);
+            width = 350;
+            Gauge = new Gauge("gauge", "pixel", bound, 100, 100, width, Color.LightGreen);
         }
 
 
@@ -29,11 +36,14 @@ namespace Game1.Scene
         {
             renderer.Begin();
             player.Draw(renderer);
+            boss.Draw(renderer);
+            Gauge.Draw(renderer);
             renderer.End();
         }
 
         public void Initialize()
         {
+            boss.Initialize();
         }
 
         public bool IsEnd()
@@ -53,11 +63,13 @@ namespace Game1.Scene
 
         public void Update(GameTime gameTime)
         {
-            if (Input.GetKeyTrigger(Keys.Space))
-            {
-                isEndFlag = true;
-            }
+            //if (Input.GetKeyTrigger(Keys.Space))
+            //{
+            //    isEndFlag = true;
+            //}
             player.Update(gameTime);
+            boss.Update(gameTime);
+            Gauge.Update();
         }
     }
 }
