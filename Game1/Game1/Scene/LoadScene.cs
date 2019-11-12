@@ -48,6 +48,7 @@ namespace Game1.Scene
                 {"Bullet16",path },
                 {"gauge",path },
                 {"pixel",path },
+                {"Block",path },
             };
 
             return data;
