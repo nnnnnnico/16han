@@ -11,19 +11,38 @@ namespace Game1.Actor
 {
     class Bullet : Character
     {
+        private Vector2 vector2;
+        private GameDevice gameDevice;
+        Vector2 velocity;
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="position"></param>
         /// <param name="gameDevice"></param>
-        /// <param name="loadScene"></param>
-        public Bullet(Vector2 position,GameDevice gameDevice, LoadScene loadScene)
-            :base ("Bullet16",position,64,64)
+        public Bullet(Vector2 position,GameDevice gameDevice)
+            :base ("Bullet16",position,16,16)
         {
-
+          
+            //velocity = Vector2.Zero;
         }
+
+      
+
         public override void Update(GameTime gameTime)
         {
+            // float speed = 4.0f;
+
+            //position = new Vector2(300, 300);
+            
+
+          //  velocity = Input.Velocity() * speed;
+
+            //位置の計算
+           // position = position + velocity;
+
+
+           
 
         }
 
