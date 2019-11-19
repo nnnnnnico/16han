@@ -30,8 +30,7 @@ namespace Game1.Actor
             bound = Bound;
             gaugeWidth = GaugeWidth;
             maxHp = MaxHp;
-            startHp = StartHp;
-            currentHp = startHp;
+            currentHp = StartHp;
             color = Color;
         }
         public void Draw(Renderer renderer)
@@ -43,7 +42,11 @@ namespace Game1.Actor
 
         public void Update()
         {
-            currentHp = startHp;
+        }
+
+        public void ThisHp(int hp)
+        {
+            currentHp = hp;
         }
     }
 }

@@ -17,11 +17,12 @@ namespace Game1.Scene
         public Boss boss;
         private CharacterManager characterManager;
         private GameDevice gameDevice;
+
         public GamePlay()
         {
             isEndFlag = false;
             gameDevice = GameDevice.Instance();
-            characterManager = new CharacterManager(); boss = new Boss(new Vector2(400, 400), gameDevice);
+            characterManager = new CharacterManager(); 
         }
 
         public void Draw(Renderer renderer)
@@ -41,6 +42,7 @@ namespace Game1.Scene
             map = new Map(GameDevice.Instance());
             map.Load("map.csv","./csv/");
 
+            boss = new Boss(new Vector2(400, 640), GameDevice.Instance(),characterManager);
             player = new Player(new Vector2(200, 200), GameDevice.Instance(),characterManager);
 
             characterManager.Add(map);

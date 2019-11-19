@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Game1.Actor;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Game1.Scene
 {
     interface IGameMediator
     {
+        void AddGameObject(Character gameObject);
         Vector2 MapSize();
     }
 }

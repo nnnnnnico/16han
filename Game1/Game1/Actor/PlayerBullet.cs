@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game1.Actor
 {
-    class Bullet : Character
+    class PlayerBullet : Character
     {
         private Vector2 vector2;
         Vector2 velocity;
@@ -22,7 +22,7 @@ namespace Game1.Actor
         /// </summary>
         /// <param name="position"></param>
         /// <param name="gameDevice"></param>
-        public Bullet(Vector2 position,int dir, GameDevice gameDevice)
+        public PlayerBullet(Vector2 position, int dir, GameDevice gameDevice)
             : base("Bullet16", position, 16, 16, gameDevice)
         {
             speed = 20.0f;
@@ -30,15 +30,15 @@ namespace Game1.Actor
             _dir = dir;
         }
 
-        public Bullet(Bullet other)
-            : this(other.position,other._dir, other.gameDevice)
+        public PlayerBullet(PlayerBullet other)
+            : this(other.position, other._dir, other.gameDevice)
         {
 
         }
 
         public override object Clone()
         {
-            return new Bullet(this);
+            return new PlayerBullet(this);
         }
 
         public override void Update(GameTime gameTime)
@@ -51,11 +51,11 @@ namespace Game1.Actor
 
         public override void Hit(Character other)
         {
-            if(other is Block)
+            if (other is Block)
             {
                 isDeadFlag = true;
             }
-            if(other is Player)
+            if(other is Boss)
             {
                 isDeadFlag = true;
             }
@@ -74,7 +74,7 @@ namespace Game1.Actor
         private void Destroy(float time)
         {
             count++;
-            if(count/60.0f * time == 1)
+            if (count / 60.0f * time == 1)
             {
                 isDeadFlag = true;
             }

@@ -128,6 +128,7 @@ namespace Game1.Actor
                 gameObjectList.Add(c);
             }
 
+
             //追加終了後、追加リストはクリア
             addGameObjects.Clear();
 

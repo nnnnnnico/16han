@@ -23,15 +23,19 @@ namespace Game1.Actor
         private int time;
         private Random rnd;
         private int count;
-        public Boss(Vector2 position,GameDevice gameDevice)
+        private IGameMediator mediator;
+        private int dir;
+
+        public Boss(Vector2 position,GameDevice gameDevice,IGameMediator mediator)
             : base("Boss()",position ,128, 128,gameDevice)
         {
-            bulletList = new List<Bullet>();
+            this.mediator = mediator;
+            //bulletList = new List<Bullet>();
             rnd = new Random();
         }
 
         public Boss(Boss other)
-            : this(other.position, other.gameDevice)
+            : this(other.position, other.gameDevice,other.mediator)
         {
 
         }
@@ -51,7 +55,7 @@ namespace Game1.Actor
 
         public override void Initialize()
         {
-            bulletList.Clear();
+            //bulletList.Clear();
             Hp = 100;
             right = true;
             vel = Vector2.Zero;
@@ -71,10 +75,10 @@ namespace Game1.Actor
             {
                 count = rnd.Next(6);
             }
-            foreach (var bullet in bulletList)
-            {
-                bullet.Update(gameTime);
-            }
+            //foreach (var bullet in bulletList)
+            //{
+            //    bullet.Update(gameTime);
+            //}
             if (count == 0 || count == 4)
             {
                 if (a == 0)
@@ -128,7 +132,16 @@ namespace Game1.Actor
                 }
             }
             position = position + vel;
-            //bulletList.RemoveAll(a => a.IsDead() == true);
+            //bulletList.RemoveAll(bullets => bullets.IsDead());
+            if(vel.X >= 1)
+            {
+                dir = 1; //右
+            }
+            else if(vel.X <= 1)
+            {
+                dir = -1; //左
+            }
+
         }
         public void MoveRight()
         {
@@ -150,24 +163,27 @@ namespace Game1.Actor
         //右移動時に弾発射
         public void Attack1()
         {
-            bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
+            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
+            mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 64),dir, gameDevice));
         }
         //左移動時に弾を発射
         public void Attack2()
         {
-            bulletList.Add(new Bullet(new Vector2(position.X, position.Y), gameDevice));
-            bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
-            bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 128), gameDevice));
+            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y), gameDevice));
+            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
+            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 128), gameDevice));
+            mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y),dir, gameDevice));
+            mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 64),dir,gameDevice));
+            mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 128),dir, gameDevice));
         }
 
         public override void Draw(Renderer renderer)
         {
-            foreach(var bullet in bulletList)
-            {
-                bullet.Draw(renderer);
-            }
+            //foreach(var bullet in bulletList)
+            //{
+                //bullet.Draw(renderer);
+            //}
             renderer.DrawTexture("Boss()", position + gameDevice.GetDisplayModify());
         }
-
     }
 }

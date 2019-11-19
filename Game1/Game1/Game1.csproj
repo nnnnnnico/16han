@@ -49,6 +49,7 @@
     <Compile Include="Actor\Gauge.cs" />
     <Compile Include="Actor\Map.cs" />
     <Compile Include="Actor\Player.cs" />
+    <Compile Include="Actor\PlayerBullet.cs" />
     <Compile Include="Actor\Space.cs" />
     <Compile Include="Def\Screen.cs" />
     <Compile Include="Device\Camera.cs" />

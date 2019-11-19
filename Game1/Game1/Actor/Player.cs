@@ -25,10 +25,13 @@ namespace Game1.Actor
         private bool escape;
         private int escapeTime;
         private const float speed = 4.0f;
+        private bool flashPlayer;
+        private int right;
 
         public Gauge gauge;
 
         int hp;
+        float alpha;
 
         public Player(Vector2 position,GameDevice gameDevice,IGameMediator mediator)
             :base("TankRight",position,64,64,gameDevice)
@@ -40,9 +43,12 @@ namespace Game1.Actor
             gravity = 10;
             isGround = false;
             escape = false;
+            alpha = 1.0f;
+            flashPlayer = false;
+            right = 1;
 
-            Rectangle bound = new Rectangle(100, 100, 0, 20);
-            gauge = new Gauge("gauge", "pixel",0,700,bound, hp, hp, 300, Color.LightGreen);
+            Rectangle bound = new Rectangle(100, 100, 0, 50);
+            gauge = new Gauge("gauge", "pixel",0,700,bound, hp,hp, 350, Color.LightGreen);
         }
 
         public Player(Player other)
@@ -70,6 +76,10 @@ namespace Game1.Actor
                     hp -= 5;
                 }
             }
+            if(other is Bullet)
+            {
+                hp -= 3;
+            }
 
         }
 
@@ -85,7 +95,7 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
-            gauge.Update();
+            gauge.ThisHp(hp);
             velocity = Input.Velocity() * speed;
 
             //位置の計算
@@ -109,21 +119,28 @@ namespace Game1.Actor
             if (hitDirect)
             {
                 escapeTime++;
-                if (escapeTime / 30.0f == 1)
+                if(escapeTime % 10.0f == 0)
+                {
+                    flashPlayer = !flashPlayer;
+                }
+                if (escapeTime / 60.0f == 1)
                 {
                     hitDirect = false;
+                    escapeTime = 0;
                 }
             }
 
-            //if (escape)
-            //{
-            //    escapeTime++;
-            //    if(escapeTime / 30.0f == 1)
-            //    {
-            //        escape = false;
-            //        hitDirect = false;
-            //    }
-            //}
+            Flash();
+            Shot();
+
+            if(Input.GetKeyTrigger(Keys.Left))
+            {
+                right = -1;
+            }
+            else if(Input.GetKeyTrigger(Keys.Right))
+            {
+                right = 1;
+            }
         }
 
         private void EscapeMove()
@@ -189,8 +206,28 @@ namespace Game1.Actor
 
         public override void Draw(Renderer renderer)
         {
-            renderer.DrawTexture(name, position + gameDevice.GetDisplayModify());
+            renderer.DrawTexture(name, position + gameDevice.GetDisplayModify(),Color.White * alpha);
             gauge.Draw(renderer);
+        }
+
+        public void Flash()
+        {
+            if (flashPlayer)
+            {
+                alpha = 0.5f;
+            }
+            else
+            {
+                alpha = 1.0f;
+            }
+        }
+
+        private void Shot()
+        {
+            if (Input.GetKeyTrigger(Keys.Space))
+            {
+                mediator.AddGameObject(new PlayerBullet(position, right, gameDevice));
+            }
         }
     }
 }
