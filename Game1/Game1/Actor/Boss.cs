@@ -166,7 +166,7 @@ namespace Game1.Actor
             {
                 bullet.Draw(renderer);
             }
-            renderer.DrawTexture("Boss()", position);
+            renderer.DrawTexture("Boss()", position + gameDevice.GetDisplayModify());
         }
 
     }
