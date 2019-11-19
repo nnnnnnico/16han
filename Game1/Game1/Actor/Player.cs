@@ -18,20 +18,35 @@ namespace Game1.Actor
     class Player : Character
     {
         Vector2 velocity;
-        
+        private IGameMediator mediator;
+        private float gravity;
+        private bool isGround;
+        private bool hitDirect;
+        private bool escape;
+        private int escapeTime;
+        private const float speed = 4.0f;
+
+        public Gauge gauge;
 
         int hp;
 
-        public Player(Vector2 position,GameDevice gameDevice)
+        public Player(Vector2 position,GameDevice gameDevice,IGameMediator mediator)
             :base("TankRight",position,64,64,gameDevice)
         {
-            position = new Vector2(100, 100);
+            position = new Vector2(650, 128);
+            this.mediator = mediator;
             velocity = Vector2.Zero;
-            hp = 10;
+            hp = 100;
+            gravity = 10;
+            isGround = false;
+            escape = false;
+
+            Rectangle bound = new Rectangle(100, 100, 0, 20);
+            gauge = new Gauge("gauge", "pixel",0,700,bound, hp, hp, 300, Color.LightGreen);
         }
 
         public Player(Player other)
-            : this(other.position, other.gameDevice)
+            : this(other.position, other.gameDevice,other.mediator)
         {
 
         }
@@ -47,12 +62,20 @@ namespace Game1.Actor
             {
                 hitBlock(other);
             }
+            if(other is Boss)
+            {
+                if (!hitDirect)
+                {
+                    hitDirect = true;
+                    hp -= 5;
+                }
+            }
 
         }
 
         public override void Initialize()
         {
-
+            
         }
 
         public override void Shutdown()
@@ -62,12 +85,58 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
-            float speed = 4.0f;
-
+            gauge.Update();
             velocity = Input.Velocity() * speed;
 
             //位置の計算
             position = position + velocity;
+            position.X = MathHelper.Clamp(position.X,0, mediator.MapSize().X - width);
+
+            EscapeMove();
+
+            SetDisplayModify();
+
+            if(hp <= 0)
+            {
+                isDeadFlag = true;
+            }
+
+            if (!isGround)
+            {
+                position.Y += gravity;
+            }
+
+            if (hitDirect)
+            {
+                escapeTime++;
+                if (escapeTime / 30.0f == 1)
+                {
+                    hitDirect = false;
+                }
+            }
+
+            //if (escape)
+            //{
+            //    escapeTime++;
+            //    if(escapeTime / 30.0f == 1)
+            //    {
+            //        escape = false;
+            //        hitDirect = false;
+            //    }
+            //}
+        }
+
+        private void EscapeMove()
+        {
+            if(velocity.X >= 0&&Input.GetKeyTrigger(Keys.Z))
+            {
+                position.X += 150;
+            }
+            if (velocity.X <= 0 && Input.GetKeyTrigger(Keys.Z))
+            {
+                position.X -= 150;
+            }
+
         }
 
         private void hitBlock(Character gameObject)
@@ -78,6 +147,7 @@ namespace Game1.Actor
             //ブロックの上面と衝突
             if (dir == Direction.Top)
             {
+                isGround = true;
                 //プレイヤーがブロックの上にのった
                 if (position.Y > 0.0f)//降下中の時、ジャンプ状態終了
                 {
@@ -85,36 +155,42 @@ namespace Game1.Actor
                     velocity.Y = 0.0f;
                 }
             }
-            else if (dir == Direction.Right)//右
+            if (dir == Direction.Right)//右
             {
                 position.X = gameObject.GetRectangle().Right;
             }
-            else if (dir == Direction.Left)//左
+            if (dir == Direction.Left)//左
             {
                 position.X = gameObject.GetRectangle().Left - this.width;
             }
-            else if (dir == Direction.Bottom)//下
+            if (dir == Direction.Bottom)//下
             {
                 position.Y = gameObject.GetRectangle().Bottom;
             }
-            //SetDisplayModify();
+            SetDisplayModify();
         }
 
-        //private void SetDisplayModify()
-        //{
-        //    //中心で描画するよう補正値を設定
-        //    gameDevice.SetDisplayModify(new Vector2(-position.X + (Screen.Width / 2 -
-        //        width / 2), 0.0f));
+        private void SetDisplayModify()
+        {
+            //中心で描画するよう補正値を設定
+            gameDevice.SetDisplayModify(new Vector2(-position.X + (Screen.Width / 2 -
+                width / 2), -position.Y + (Screen.Height - height * 2)));
 
-        //    //プレイヤーのX座標が画面の中心より左なら見切れているので、Vector2.Zeroで設定しなおす
-        //    if (position.X < (Screen.Width / 2) - width / 2)
-        //    {
-        //        gameDevice.SetDisplayModify(Vector2.Zero);
-        //    }
-        //    if (position.X > (mediator.MapSize().X) - (Screen.Width / 2 + width / 2))
-        //    {
-        //        gameDevice.SetDisplayModify(new Vector2(-mediator.MapSize().X + Screen.Width, 0));
-        //    }
-        //}
+            //プレイヤーのX座標が画面の中心より左なら見切れているので、Vector2.Zeroで設定しなおす
+            if (position.X < (Screen.Width / 2) - width / 2)
+            {
+                gameDevice.SetDisplayModify(new Vector2(0, -position.Y + (Screen.Height - height * 2)));
+            }
+            if (position.X > (mediator.MapSize().X) - (Screen.Width / 2 + width / 2))
+            {
+                gameDevice.SetDisplayModify(new Vector2(-mediator.MapSize().X + Screen.Width, -position.Y + (Screen.Height - height * 2)));
+            }
+        }
+
+        public override void Draw(Renderer renderer)
+        {
+            renderer.DrawTexture(name, position + gameDevice.GetDisplayModify());
+            gauge.Draw(renderer);
+        }
     }
 }

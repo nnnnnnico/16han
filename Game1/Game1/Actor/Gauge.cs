@@ -10,34 +10,40 @@ namespace Game1.Actor
 {
     class Gauge
     {
-        string bgTexture;
-        string pixel;
-        float maxHp;
-        public float currentHp;
+        string bgTexture;   //アセット名
+        string pixel;       //1ピクセルの画像名
         float width;
-        Rectangle bound;
-        Color color;
+        float height;
+        float maxHp;        //マックスHP
+        public float currentHp;//現在のHP
+        public float startHp;
+        float gaugeWidth;        //ゲージの横幅
+        Rectangle bound;    //
+        Color color;        //色
 
-        public Gauge(string BgTexture, string Pixel,Rectangle Bound,float StartHp,float MaxHp,float Width,Color Color)
+        public Gauge(string BgTexture, string Pixel,float Width,float Height,Rectangle Bound,float StartHp,float MaxHp,float GaugeWidth,Color Color)
         {
             bgTexture = BgTexture;
             pixel = Pixel;
-            bound = Bound;
             width = Width;
+            height = Height;
+            bound = Bound;
+            gaugeWidth = GaugeWidth;
             maxHp = MaxHp;
-            currentHp = StartHp;
+            startHp = StartHp;
+            currentHp = startHp;
             color = Color;
         }
         public void Draw(Renderer renderer)
         {
-            int gaugee = (int)((currentHp / maxHp) * width);
-            renderer.DrawTexture(pixel, new Rectangle(bound.X, bound.Y, gaugee, bound.Height), color);
-            renderer.DrawTexture(bgTexture, bound, Color.White);
+            int gaugee = (int)((currentHp / maxHp) * gaugeWidth);
+            renderer.DrawTexture(pixel,new Vector2(width,height), new Rectangle(bound.X, bound.Y, gaugee, bound.Height), color);
+            renderer.DrawTexture(bgTexture,new Vector2(width,height), bound, Color.White);
         }
 
         public void Update()
         {
-            currentHp--;
+            currentHp = startHp;
         }
     }
 }

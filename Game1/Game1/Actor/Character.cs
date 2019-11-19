@@ -23,7 +23,7 @@ namespace Game1.Actor
         protected Vector2 position;
         protected string name;
         protected bool isDeadFlag;
-        protected IGameMediator mediator;
+        //protected IGameMediator mediator;
         protected int width;//幅
         protected int height;//高さ
         protected GameDevice gameDevice;
@@ -34,7 +34,7 @@ namespace Game1.Actor
             this.position = position;
             this.gameDevice = gameDevice;
             isDeadFlag = false;
-            this.mediator = mediator;
+            //this.mediator = mediator;
             this.width = width;
             this.height = height;
         }
@@ -72,7 +72,7 @@ namespace Game1.Actor
 
         public virtual void Draw(Renderer renderer)
         {
-            renderer.DrawTexture(name, position);
+            renderer.DrawTexture(name, position + gameDevice.GetDisplayModify());
         }
         //public bool IsCollision(Character other)
         //{
