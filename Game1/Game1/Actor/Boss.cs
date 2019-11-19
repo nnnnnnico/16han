@@ -16,13 +16,18 @@ namespace Game1.Actor
 {
     class Boss : Character
     {
-        private int count;
         private List<Bullet> bulletList;
         private int Hp;
+        private bool right;
+        Vector2 vel;
+        private int time;
+        private Random rnd;
+        private int count;
         public Boss(Vector2 position,GameDevice gameDevice)
             : base("Boss()",position ,128, 128,gameDevice)
         {
             bulletList = new List<Bullet>();
+            rnd = new Random();
         }
 
         public Boss(Boss other)
@@ -38,13 +43,18 @@ namespace Game1.Actor
 
         public override void Hit(Character other)
         {
-            Hp = Hp - 2;
+            if (other is Player)
+            {
+                Hp = Hp - 1;
+            }
         }
 
         public override void Initialize()
         {
             bulletList.Clear();
             Hp = 100;
+            right = true;
+            vel = Vector2.Zero;
         }
 
         public override void Shutdown()
@@ -53,45 +63,101 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
-            foreach(var bullet in bulletList)
+            time += 1;
+            int a = time % 15;
+            int b = time % 30;
+            int c = time % 90;
+            if (c == 0)
+            {
+                count = rnd.Next(6);
+            }
+            foreach (var bullet in bulletList)
             {
                 bullet.Update(gameTime);
             }
-            if (count == 0)
+            if (count == 0 || count == 4)
             {
-                position.X++;
-                Attack1();
+                if (a == 0)
+                {
+                    Attack1();
+                }
+                if (position.X <= 1280 - 128)
+                {
+                    MoveRight();
+                }
+                else
+                {
+                    count = 1;
+                }
             }
-            if (count == 1)
+            if (count == 1 || count == 5)
             {
-                position.X--;
-                Attack2();
+                if (b == 0)
+                {
+                    Attack2();
+                }
+                if (position.X >= 300)
+                {
+                    MoveLeft();
+                }
+                else
+                {
+                    count = 0;
+                }
             }
             if (count == 2)
             {
-                Attack3();
-                count = 0;
+                if (position.X <= 1280 - 128)
+                {
+                    AttackMoveRight();
+                }
+                else
+                {
+                    count = 3;
+                }
             }
-            if (Input.GetKeyTrigger(Keys.X) || Input.GetKeyTrigger(Keys.Z))
+            if (count == 3)
             {
-                count++;
+                if (position.X >= 300)
+                {
+                    AttackMoveLeft();
+                }
+                else
+                {
+                    count = 2;
+                }
             }
+            position = position + vel;
             //bulletList.RemoveAll(a => a.IsDead() == true);
         }
-        //右に弾発射
-        public void Attack1()
+        public void MoveRight()
         {
-            bulletList.Add(new Bullet(new Vector2(position.X+128,position.Y+64), gameDevice));
+            vel.X = 1.5f;
         }
-        //左に弾を発射
-        public void Attack2()
+
+        public void MoveLeft()
+        {
+            vel.X = -1.5f;
+        }
+        public void AttackMoveRight()
+        {
+            vel.X = 3;
+        }
+        public void AttackMoveLeft()
+        {
+            vel.X = -3;
+        }
+        //右移動時に弾発射
+        public void Attack1()
         {
             bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
         }
-
-        public void Attack3()
+        //左移動時に弾を発射
+        public void Attack2()
         {
-
+            bulletList.Add(new Bullet(new Vector2(position.X, position.Y), gameDevice));
+            bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
+            bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 128), gameDevice));
         }
 
         public override void Draw(Renderer renderer)

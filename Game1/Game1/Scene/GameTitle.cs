@@ -14,36 +14,36 @@ namespace Game1.Scene
     class GameTitle : IScene
     {
         private bool isEndFlag;
-        public Player player;
-        public Boss boss;
-        private GameDevice gameDevice;
-        public Gauge Gauge;
-        private int width;
+        //public Player player;
+        //public Boss boss;
+        //private GameDevice gameDevice;
+        //public Gauge Gauge;
+        //private int width;
 
         public GameTitle()
         {
             isEndFlag = false;
-            gameDevice = GameDevice.Instance();
-            player = new Player(new Vector2(100, 100), gameDevice);
-            boss = new Boss(new Vector2(400, 400), gameDevice);
-            Rectangle bound = new Rectangle(100, 100, width, 50);
-            width = 350;
-            Gauge = new Gauge("gauge", "pixel", bound, 100, 100, width, Color.LightGreen);
+            //gameDevice = GameDevice.Instance();
+            //player = new Player(new Vector2(100, 100), gameDevice);
+            //boss = new Boss(new Vector2(400, 400), gameDevice);
+            //Rectangle bound = new Rectangle(100, 100, width, 50);
+            //width = 350;
+            //Gauge = new Gauge("gauge", "pixel", bound, 100, 100, width, Color.LightGreen);
         }
 
 
         public void Draw(Renderer renderer)
         {
             renderer.Begin();
-            player.Draw(renderer);
-            boss.Draw(renderer);
-            Gauge.Draw(renderer);
+            //boss.Draw(renderer);
+            //player.Draw(renderer);
+            //Gauge.Draw(renderer);
             renderer.End();
         }
 
         public void Initialize()
         {
-            boss.Initialize();
+            //boss.Initialize();
         }
 
         public bool IsEnd()
@@ -67,9 +67,9 @@ namespace Game1.Scene
             {
                 isEndFlag = true;
             }
-            player.Update(gameTime);
-            boss.Update(gameTime);
-            Gauge.Update();
+            //player.Update(gameTime);
+            //boss.Update(gameTime);
+            //Gauge.Update();
         }
     }
 }
