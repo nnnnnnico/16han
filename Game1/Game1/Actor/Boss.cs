@@ -112,7 +112,7 @@ namespace Game1.Actor
                 {
                     Attack2();
                 }
-                if (position.X >= 300)
+                if (position.X >= 0+128*2)
                 {
                     MoveLeft();
                 }
@@ -123,27 +123,27 @@ namespace Game1.Actor
             }
             if (count == 2)
             {
-                 if (position.X <= 1280 - 128 * 2)
-                 {
-                     Charge = 1;
-                     AttackMoveRight();
-                 }
-                 else
-                 {
-                     count = 1;
-                 }
+                if (position.X <= 1280 - 128 * 2)
+                {
+                    Charge = 1;
+                    AttackMoveRight();
+                }
+                else
+                {
+                    count = 1;
+                }
             }
             if (count == 3)
             {
-                 if (position.X >= 0)
-                 {
-                     Charge = 1;
-                     AttackMoveLeft();
-                 }
-                 else
-                 {
-                     count = 0;
-                 }
+                if (position.X >= 0+128*2)
+                {
+                    Charge = 1;
+                    AttackMoveLeft();
+                }
+                else
+                {
+                    count = 0;
+                }
             }
             position = position + vel;
             //bulletList.RemoveAll(bullets => bullets.IsDead());
@@ -168,11 +168,11 @@ namespace Game1.Actor
         }
         public void AttackMoveRight()
         {
-            vel.X += 0.3f;
+            vel.X += 0.2f;
         }
         public void AttackMoveLeft()
         {
-            vel.X -= 0.3f;
+            vel.X -= 0.2f;
         }
         //右移動時に弾発射
         public void Attack1()
@@ -180,12 +180,16 @@ namespace Game1.Actor
             //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
             if (dir == -1)
             {
-                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 72), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 100), dir, gameDevice));
             }
             if (dir == 1)
             {
-                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 72), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 100), dir, gameDevice));
             }
+        }
+        public void Stop()
+        {
+            vel.X = 0;
         }
         //左移動時に弾を発射
         public void Attack2()
@@ -195,15 +199,15 @@ namespace Game1.Actor
             //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 128), gameDevice));
             if (dir == -1)
             {
-                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y), dir, gameDevice));
-                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 72), dir, gameDevice));
-                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 136), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y+20), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 100), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 145), dir, gameDevice));
             }
             if (dir == 1)
             {
-                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y), dir, gameDevice));
-                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 72), dir, gameDevice));
-                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 136), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y+20), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 100), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 145), dir, gameDevice));
             }
         }
 
