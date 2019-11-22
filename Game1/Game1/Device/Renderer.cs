@@ -243,6 +243,26 @@ namespace Game1.Device
                 0.0f                    // スプライト表示深度
                 );
         }
+
+        public void DrawTexture(string name, Vector2 position, Vector2 scale, Color color ,float alpha = 1.0f)
+        {
+            Debug.Assert(textures.ContainsKey(name),
+                "アセット名を間違えていませんか？\n" +
+                "大文字小文字が間違ってませんか？\n" +
+                "LoadTextureで読み込んでますか？\n" +
+                "プログラムを確認してください\n");
+            spriteBatch.Draw(
+                textures[name],         // 画像
+                position,               // 位置
+                null,                   // 切り取り範囲
+                color,    // 透過
+                0.0f,                   // 回転
+                Vector2.Zero,           // 回転軸の位置
+                scale,                  // 拡大縮小
+                SpriteEffects.None,     // 表示反転効果
+                0.0f                    // スプライト表示深度
+                );
+        }
         /// <summary>
         /// 画像の回転
         /// </summary>
