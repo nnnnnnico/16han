@@ -1,5 +1,6 @@
 ﻿using Game1.Device;
 using Game1.Scene;
+using Game1.Util;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Game1.Actor
         private float speed;
         private int _dir;
         private int count;
+        private Motion motion;
 
         /// <summary>
         /// コンストラクタ
@@ -28,6 +30,7 @@ namespace Game1.Actor
             speed = 20.0f;
             count = 0;
             _dir = dir;
+
         }
 
         public PlayerBullet(PlayerBullet other)
@@ -46,6 +49,8 @@ namespace Game1.Actor
             //位置の計算
             position.X = position.X + speed * _dir;
 
+            motion.Update(gameTime);
+
             Destroy(1.0f);
         }
 
@@ -63,7 +68,13 @@ namespace Game1.Actor
 
         public override void Initialize()
         {
+            motion = new Motion();
 
+            for(int i = 0; i >= 8; i++)
+            {
+                motion.Add(i, new Rectangle(240 * i, 0, 240, 240));
+            }
+            motion.Initialize(new Range(0, 8), new CountDownTimer(0.05f));
         }
 
         public override void Shutdown()
