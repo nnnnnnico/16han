@@ -49,7 +49,6 @@ namespace Game1.Actor
             //位置の計算
             position.X = position.X + speed * _dir;
 
-            motion.Update(gameTime);
 
             Destroy(1.0f);
         }
