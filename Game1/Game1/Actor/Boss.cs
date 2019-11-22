@@ -112,7 +112,7 @@ namespace Game1.Actor
                 {
                     Attack2();
                 }
-                if (position.X >= 0+128*2)
+                if (position.X >= 0)
                 {
                     MoveLeft();
                 }
@@ -126,7 +126,10 @@ namespace Game1.Actor
                 if (position.X <= 1280 - 128 * 2)
                 {
                     Charge = 1;
-                    AttackMoveRight();
+                    if (Charge == 1)
+                    {
+                        AttackMoveRight();
+                    }
                 }
                 else
                 {
@@ -135,10 +138,13 @@ namespace Game1.Actor
             }
             if (count == 3)
             {
-                if (position.X >= 0+128*2)
+                if (position.X >= 0)
                 {
                     Charge = 1;
-                    AttackMoveLeft();
+                    if (Charge == 1)
+                    {
+                        AttackMoveLeft();
+                    }
                 }
                 else
                 {
@@ -159,20 +165,20 @@ namespace Game1.Actor
         }
         public void MoveRight()
         {
-            vel.X = 1.5f;
+            vel.X = 1.0f;
         }
 
         public void MoveLeft()
         {
-            vel.X = -1.5f;
+            vel.X = -1.0f;
         }
         public void AttackMoveRight()
         {
-            vel.X += 0.2f;
+            vel.X += 0.125f;
         }
         public void AttackMoveLeft()
         {
-            vel.X -= 0.2f;
+            vel.X -= 0.125f;
         }
         //右移動時に弾発射
         public void Attack1()
@@ -186,10 +192,6 @@ namespace Game1.Actor
             {
                 mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 100), dir, gameDevice));
             }
-        }
-        public void Stop()
-        {
-            vel.X = 0;
         }
         //左移動時に弾を発射
         public void Attack2()
