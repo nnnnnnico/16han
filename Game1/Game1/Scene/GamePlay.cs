@@ -42,7 +42,7 @@ namespace Game1.Scene
             map = new Map(GameDevice.Instance());
             map.Load("map.csv","./csv/");
 
-            boss = new Boss(new Vector2(400, 640), GameDevice.Instance(),characterManager);
+            boss = new Boss(new Vector2(400, 480), GameDevice.Instance(),characterManager);
             player = new Player(new Vector2(200, 200), GameDevice.Instance(),characterManager);
 
             characterManager.Add(map);

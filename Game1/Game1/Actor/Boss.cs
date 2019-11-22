@@ -17,7 +17,7 @@ namespace Game1.Actor
     class Boss : Character
     {
         private List<Bullet> bulletList;
-        private int Hp;
+        private int hp;
         private bool right;
         Vector2 vel;
         private int time;
@@ -25,19 +25,25 @@ namespace Game1.Actor
         private int count;
         private IGameMediator mediator;
         private int dir;
+        public Gauge gauge;
+        private int Charge;
 
         public Boss(Vector2 position,GameDevice gameDevice,IGameMediator mediator)
-            : base("Boss()",position ,128, 128,gameDevice)
+            : base("Boss()",position ,128*2, 128*2,gameDevice)
         {
             this.mediator = mediator;
             //bulletList = new List<Bullet>();
             rnd = new Random();
+            hp = 100;
+            Charge = 0;
+            Rectangle bound = new Rectangle(100, 100, 0, 50);
+            gauge = new Gauge("gauge", "pixel", 100, 100, bound, hp, hp, 1100, Color.LightGreen);
         }
 
         public Boss(Boss other)
             : this(other.position, other.gameDevice,other.mediator)
         {
-
+            
         }
 
         public override object Clone()
@@ -47,16 +53,15 @@ namespace Game1.Actor
 
         public override void Hit(Character other)
         {
-            if (other is Player)
+            if (other is PlayerBullet)
             {
-                Hp = Hp - 1;
+                hp -= 1;
             }
         }
 
         public override void Initialize()
         {
             //bulletList.Clear();
-            Hp = 100;
             right = true;
             vel = Vector2.Zero;
         }
@@ -67,8 +72,13 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
+            gauge.ThisHp(hp);
+            if (hp <= 0)
+            {
+                isDeadFlag = true;
+            }
             time += 1;
-            int a = time % 15;
+            int a = time % 30;
             int b = time % 30;
             int c = time % 90;
             if (c == 0)
@@ -81,11 +91,12 @@ namespace Game1.Actor
             //}
             if (count == 0 || count == 4)
             {
+                Charge = 0;
                 if (a == 0)
                 {
                     Attack1();
                 }
-                if (position.X <= 1280 - 128)
+                if (position.X <= 1280 - 128 * 2)
                 {
                     MoveRight();
                 }
@@ -96,6 +107,7 @@ namespace Game1.Actor
             }
             if (count == 1 || count == 5)
             {
+                Charge = 0;
                 if (b == 0)
                 {
                     Attack2();
@@ -111,25 +123,27 @@ namespace Game1.Actor
             }
             if (count == 2)
             {
-                if (position.X <= 1280 - 128)
-                {
-                    AttackMoveRight();
-                }
-                else
-                {
-                    count = 3;
-                }
+                 if (position.X <= 1280 - 128 * 2)
+                 {
+                     Charge = 1;
+                     AttackMoveRight();
+                 }
+                 else
+                 {
+                     count = 1;
+                 }
             }
             if (count == 3)
             {
-                if (position.X >= 300)
-                {
-                    AttackMoveLeft();
-                }
-                else
-                {
-                    count = 2;
-                }
+                 if (position.X >= 0)
+                 {
+                     Charge = 1;
+                     AttackMoveLeft();
+                 }
+                 else
+                 {
+                     count = 0;
+                 }
             }
             position = position + vel;
             //bulletList.RemoveAll(bullets => bullets.IsDead());
@@ -154,17 +168,24 @@ namespace Game1.Actor
         }
         public void AttackMoveRight()
         {
-            vel.X = 3;
+            vel.X += 0.3f;
         }
         public void AttackMoveLeft()
         {
-            vel.X = -3;
+            vel.X -= 0.3f;
         }
         //右移動時に弾発射
         public void Attack1()
         {
             //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
-            mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 64),dir, gameDevice));
+            if (dir == -1)
+            {
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 72), dir, gameDevice));
+            }
+            if (dir == 1)
+            {
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 72), dir, gameDevice));
+            }
         }
         //左移動時に弾を発射
         public void Attack2()
@@ -172,18 +193,43 @@ namespace Game1.Actor
             //bulletList.Add(new Bullet(new Vector2(position.X, position.Y), gameDevice));
             //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
             //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 128), gameDevice));
-            mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y),dir, gameDevice));
-            mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 64),dir,gameDevice));
-            mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 128),dir, gameDevice));
+            if (dir == -1)
+            {
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 72), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 136), dir, gameDevice));
+            }
+            if (dir == 1)
+            {
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 72), dir, gameDevice));
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 136), dir, gameDevice));
+            }
         }
 
         public override void Draw(Renderer renderer)
         {
             //foreach(var bullet in bulletList)
             //{
-                //bullet.Draw(renderer);
+            //bullet.Draw(renderer);
             //}
-            renderer.DrawTexture("Boss()", position + gameDevice.GetDisplayModify());
+            if (dir == -1 && Charge == 0)
+            {
+                renderer.DrawTexture("BossLeft", position + gameDevice.GetDisplayModify(), new Vector2(2, 2));
+            }
+            if (dir == -1 && Charge == 1)
+            {
+                renderer.DrawTexture("BossLeft", position + gameDevice.GetDisplayModify(), new Vector2(2, 2),Color.Red);
+            }
+            if (dir == 1 && Charge == 0)
+            {
+                renderer.DrawTexture("BossRight", position + gameDevice.GetDisplayModify(), new Vector2(2, 2));
+            }
+            if (dir == 1 && Charge == 1)
+            {
+                renderer.DrawTexture("BossRight", position + gameDevice.GetDisplayModify(), new Vector2(2, 2), Color.Red);
+            }
+            gauge.Draw(renderer);
         }
     }
 }
