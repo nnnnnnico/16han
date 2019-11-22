@@ -53,6 +53,38 @@ namespace Game1.Scene
                 {"block1",path },
                 {"BossLeft",path },
                 {"BossRight",path },
+                {"pipo-btleffect022",path },
+                {"pipo-btleffect015" ,path},
+                {"pipo-btleffect001",path },
+                {"pipo-btleffect002",path },
+                {"pipo-btleffect003",path },
+                {"pipo-btleffect004",path },
+                {"pipo-btleffect007",path },
+                {"pipo-btleffect008",path },
+                {"pipo-btleffect009",path },
+                {"pipo-btleffect012" ,path},
+                {"pipo-btleffect013",path },
+                {"pipo-btleffect014",path },
+                {"pipo-btleffect016",path },
+                {"pipo-btleffect017" ,path},
+                {"pipo-btleffect018" ,path},
+                {"pipo-btleffect019",path },
+                {"pipo-btleffect020",path },
+                {"pipo-btleffect021",path },
+                {"pipo-btleffect023",path },
+                {"pipo-btleffect024" ,path},
+                {"pipo-btleffect025",path },
+                {"pipo-btleffect026" ,path},
+                {"pipo-btleffect027",path },
+                {"pipo-btleffect028",path },
+                {"pipo-btleffect029",path },
+                {"pipo-btleffect030",path },
+                {"pipo-btleffect031" ,path},
+                {"pipo-btleffect032",path },
+                {"pipo-btleffect033",path },
+                {"pipo-btleffect034",path },
+                {"pipo-btleffect035" ,path},
+                
             };
 
             return data;
@@ -72,6 +104,11 @@ namespace Game1.Scene
             string[,] data = new string[,]
             {
                 //ここから下追加
+                {"bgm_maoudamashii_cyber44",path },
+                {"bgm_maoudamashii_cyber45" ,path},
+                {"bgm_maoudamashii_neorock70",path },
+                {"bgm_maoudamashii_neorock72",path },
+                {"bgm_maoudamashii_neorock81",path },
                 //ここから上追加
             };
 
@@ -92,7 +129,17 @@ namespace Game1.Scene
             // SE読み込み対象データ
             string[,] data = new string[,]
             {
-
+                {"battery1" ,path},
+                {"beamgun1",path },
+                {"bomb",path },
+                {"cannon2",path },
+                {"launcher1",path },
+                {"launcher3",path },
+                {"launcher6",path },
+                {"ricochets1",path },
+                {"running-tank-1",path },
+                {"short_bomb",path },
+                {"shot1",path },
             };
 
             return data;
