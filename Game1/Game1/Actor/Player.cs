@@ -27,8 +27,12 @@ namespace Game1.Actor
         private const float speed = 4.0f;
         private bool flashPlayer;
         private int right;
+        private bool isShot;
+        private int shotInterval;
+        private int shotCount;
 
         public Gauge gauge;
+
 
         int hp;
         float alpha;
@@ -46,6 +50,8 @@ namespace Game1.Actor
             alpha = 1.0f;
             flashPlayer = false;
             right = 1;
+            isShot = false;
+            
 
             Rectangle bound = new Rectangle(100, 100, 0, 50);
             gauge = new Gauge("gauge", "pixel",0,700,bound, hp,hp, 350, Color.LightGreen);
@@ -132,14 +138,20 @@ namespace Game1.Actor
 
             Flash();
             Shot();
+            NowShot();
 
-            if(Input.GetKeyTrigger(Keys.Left))
+            if (!isShot)
             {
-                right = -1;
-            }
-            else if(Input.GetKeyTrigger(Keys.Right))
-            {
-                right = 1;
+                if (Input.GetKeyTrigger(Keys.Left))
+                {
+                    right = -1;
+                    name = "TankLeft";
+                }
+                else if (Input.GetKeyTrigger(Keys.Right))
+                {
+                    right = 1;
+                    name = "TankRight";
+                }
             }
         }
 
@@ -226,7 +238,34 @@ namespace Game1.Actor
         {
             if (Input.GetKeyTrigger(Keys.Space))
             {
-                mediator.AddGameObject(new PlayerBullet(position, right, gameDevice));
+                isShot = true;
+            }
+        }
+
+        private void NowShot()
+        {
+            if (!isShot)
+                return;
+
+            shotInterval++;
+
+            if(shotInterval / 20.0f == 1)
+            {
+                shotCount++;
+                shotInterval = 0;
+                if (right == -1)
+                    mediator.AddGameObject(new PlayerBullet(new Vector2(position.X - 10, position.Y + 5), right, gameDevice));
+                    //mediator.AddGameObject(new BossBomb(new Vector2(position.X - 10, position.Y + 5),speed, right, gameDevice));
+
+                else
+                    mediator.AddGameObject(new PlayerBullet(new Vector2(position.X + width, position.Y + 6), right, gameDevice));
+                    //mediator.AddGameObject(new BossBomb(new Vector2(position.X + width, position.Y + 6),speed * 2, right, gameDevice));
+            }
+
+            if (shotCount == 3)
+            {
+                shotCount = 0;
+                isShot = false;
             }
         }
     }

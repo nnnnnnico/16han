@@ -12,7 +12,7 @@ namespace Game1.Actor
     {
 
         public Block(Vector2 positon,GameDevice gameDevice)
-            : base("Block", positon, 64, 64,gameDevice)
+            : base("block1", positon, 64, 64,gameDevice)
         {
         }
 
