@@ -12,7 +12,9 @@ namespace Game1.Scene
     {
         public void Draw(Renderer renderer)
         {
-            throw new NotImplementedException();
+            renderer.Begin();
+            renderer.DrawTexture("Ending", new Vector2());
+            renderer.End();
         }
 
         public void Initialize()

@@ -25,7 +25,7 @@ namespace Game1.Actor
         /// <param name="position"></param>
         /// <param name="gameDevice"></param>
         public PlayerBullet(Vector2 position, int dir, GameDevice gameDevice)
-            : base("Bullet16", position, 16, 16, gameDevice)
+            : base("PBullet", position, 16, 16, gameDevice)
         {
             speed = 20.0f;
             count = 0;
