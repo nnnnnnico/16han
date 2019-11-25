@@ -27,17 +27,41 @@ namespace Game1.Actor
         private int dir;
         public Gauge gauge;
         private int Charge;
+        private float alpha;
+        private int frameHalf;
+        private Color[] color;
+        private Color[] color2;
+        private int colorNumber;
+
+        private Sound sound;
+        private int lastCount;
 
         public Boss(Vector2 position,GameDevice gameDevice,IGameMediator mediator)
-            : base("Boss()",position ,128*2, 128*2,gameDevice)
+            : base("BossLeft",position ,128*2, 128*2,gameDevice)
         {
             this.mediator = mediator;
             //bulletList = new List<Bullet>();
             rnd = new Random();
-            hp = 100;
+            hp = 2500;
             Charge = 0;
             Rectangle bound = new Rectangle(100, 100, 0, 50);
-            gauge = new Gauge("gauge", "pixel", 100, 100, bound, hp, hp, 1100, Color.LightGreen);
+            gauge = new Gauge("gauge", "pixel", 150, 50, bound, hp, hp, 1100, Color.LightGreen);
+
+            alpha = 1.0f;
+            color = new Color[2] 
+            {
+                Color.White,
+                Color.DarkGray,
+            };
+            color2 = new Color[2]
+            {
+                Color.Red,
+                Color.DarkRed
+            };
+            colorNumber = 0;
+
+            gameDevice = GameDevice.Instance();
+            sound = gameDevice.GetSound();
         }
 
         public Boss(Boss other)
@@ -55,7 +79,11 @@ namespace Game1.Actor
         {
             if (other is PlayerBullet)
             {
-                hp -= 1;
+                hp -= 10;
+            }
+            if(other is PlayerFinalBullet)
+            {
+                hp -= 40;
             }
         }
 
@@ -64,6 +92,7 @@ namespace Game1.Actor
             //bulletList.Clear();
             right = true;
             vel = Vector2.Zero;
+            isDeadFlag = false;
         }
 
         public override void Shutdown()
@@ -72,24 +101,144 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
-            gauge.ThisHp(hp);
+            Dead();
+
             if (hp <= 0)
+                return;
+
+            gauge.ThisNum(hp);
+
+            if (!PlayerInvisibleMode.isInvisibleMode)
             {
-                isDeadFlag = true;
+                alpha = 1.0f;
+                colorNumber = 0;
+                if(hp >= 0)
+                    Move();
+
+                position = position + vel;
             }
+            else
+            {
+                alpha = 0.5f;
+                colorNumber = 1;
+
+                frameHalf++;
+                if(frameHalf / 2.0f == 1 && hp >= 0)
+                {
+                    Move();
+                    frameHalf = 0;
+                }             
+
+                position = position + (vel / 2);
+            }
+
+            position.X = MathHelper.Clamp(position.X, 0, mediator.MapSize().X - width/4);
+
+            //bulletList.RemoveAll(bullets => bullets.IsDead());
+            if(vel.X >= 1)
+            {
+                dir = 1; //右
+            }
+            else if(vel.X <= 1)
+            {
+                dir = -1; //左
+            }
+
+        }
+        public void MoveRight()
+        {
+            vel.X = 1.0f;
+        }
+
+        public void MoveLeft()
+        {
+            vel.X = -1.0f;
+        }
+        public void AttackMoveRight()
+        {
+            vel.X += 0.125f;
+        }
+        public void AttackMoveLeft()
+        {
+            vel.X -= 0.125f;
+        }
+        //右移動時に弾発射
+        public void Attack1()
+        {
+            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
+            if (dir == -1)
+            {
+                sound.PlaySE("short_bomb");
+                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 145), dir, gameDevice,mediator));
+            }
+            if (dir == 1)
+            {
+                sound.PlaySE("short_bomb");
+                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 145), dir, gameDevice,mediator));
+            }
+        }
+        //左移動時に弾を発射
+        public void Attack2()
+        {
+            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y), gameDevice));
+            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
+            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 128), gameDevice));
+            if (dir == -1)
+            {
+                sound.PlaySE("battery1");
+                mediator.AddGameObject(new BossBomb(new Vector2(position.X, position.Y+20), 12, 0.2f, dir, gameDevice,mediator));
+                mediator.AddGameObject(new BossBomb(new Vector2(position.X, position.Y + 100), 10, 0.4f, dir, gameDevice,mediator));
+                mediator.AddGameObject(new BossBomb(new Vector2(position.X, position.Y + 145), 8, 0.5f, dir, gameDevice,mediator));
+            }
+            if (dir == 1)
+            {
+                sound.PlaySE("battery1");
+                mediator.AddGameObject(new BossBomb(new Vector2(position.X+128*2, position.Y+20), 12, 0.2f, dir, gameDevice,mediator));
+                mediator.AddGameObject(new BossBomb(new Vector2(position.X+128*2, position.Y + 100), 10, 0.4f, dir, gameDevice,mediator));
+                mediator.AddGameObject(new BossBomb(new Vector2(position.X+128*2, position.Y + 145), 8, 0.5f, dir, gameDevice,mediator));
+            }
+        }
+
+        public override void Draw(Renderer renderer)
+        {
+            //foreach(var bullet in bulletList)
+            //{
+            //bullet.Draw(renderer);
+            //}
+            if (dir == -1 && Charge == 0)
+            {
+                renderer.DrawTexture("BossLeft", position + gameDevice.GetDisplayModify(), new Vector2(2, 2),color[colorNumber]);
+            }
+            if (dir == -1 && Charge == 1)
+            {
+                renderer.DrawTexture("BossLeft", position + gameDevice.GetDisplayModify(), new Vector2(2, 2),color2[colorNumber]);
+            }
+            if (dir == 1 && Charge == 0)
+            {
+                renderer.DrawTexture("BossRight", position + gameDevice.GetDisplayModify(), new Vector2(2, 2), color[colorNumber]);
+            }
+            if (dir == 1 && Charge == 1)
+            {
+                renderer.DrawTexture("BossRight", position + gameDevice.GetDisplayModify(), new Vector2(2, 2), color2[colorNumber]);
+            }
+            gauge.Draw(renderer);
+        }
+
+        private void Move()
+        {
             time += 1;
             int a = time % 30;
             int b = time % 30;
             int c = time % 90;
             if (c == 0)
             {
-                count = rnd.Next(6);
+                count = rnd.Next(5);
             }
             //foreach (var bullet in bulletList)
             //{
             //    bullet.Update(gameTime);
             //}
-            if (count == 0 || count == 4)
+            if (count == 0)
             {
                 Charge = 0;
                 if (a == 0)
@@ -105,7 +254,7 @@ namespace Game1.Actor
                     count = 1;
                 }
             }
-            if (count == 1 || count == 5)
+            if (count == 1)
             {
                 Charge = 0;
                 if (b == 0)
@@ -151,91 +300,46 @@ namespace Game1.Actor
                     count = 0;
                 }
             }
-            position = position + vel;
-            //bulletList.RemoveAll(bullets => bullets.IsDead());
-            if(vel.X >= 1)
-            {
-                dir = 1; //右
-            }
-            else if(vel.X <= 1)
-            {
-                dir = -1; //左
-            }
-
-        }
-        public void MoveRight()
-        {
-            vel.X = 1.0f;
         }
 
-        public void MoveLeft()
+        public void Dead()
         {
-            vel.X = -1.0f;
-        }
-        public void AttackMoveRight()
-        {
-            vel.X += 0.125f;
-        }
-        public void AttackMoveLeft()
-        {
-            vel.X -= 0.125f;
-        }
-        //右移動時に弾発射
-        public void Attack1()
-        {
-            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
-            if (dir == -1)
-            {
-                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 100), dir, gameDevice));
-            }
-            if (dir == 1)
-            {
-                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 100), dir, gameDevice));
-            }
-        }
-        //左移動時に弾を発射
-        public void Attack2()
-        {
-            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y), gameDevice));
-            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 64), gameDevice));
-            //bulletList.Add(new Bullet(new Vector2(position.X, position.Y + 128), gameDevice));
-            if (dir == -1)
-            {
-                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y+20), dir, gameDevice));
-                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 100), dir, gameDevice));
-                mediator.AddGameObject(new Bullet(new Vector2(position.X, position.Y + 145), dir, gameDevice));
-            }
-            if (dir == 1)
-            {
-                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y+20), dir, gameDevice));
-                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 100), dir, gameDevice));
-                mediator.AddGameObject(new Bullet(new Vector2(position.X+128*2, position.Y + 145), dir, gameDevice));
-            }
-        }
+            if (hp >= 0)
+                return;
 
-        public override void Draw(Renderer renderer)
-        {
-            //foreach(var bullet in bulletList)
-            //{
-            //bullet.Draw(renderer);
-            //}
-            if (dir == -1 && Charge == 0)
+            if (hp <= 0)
             {
-                renderer.DrawTexture("BossLeft", position + gameDevice.GetDisplayModify(), new Vector2(2, 2));
+                lastCount++;
+                if (lastCount / 5.0f == 1)
+                {
+                    sound.PlaySE("bomb");
+                    mediator.AddGameObject(new DeadEffect(position, 180, 100, gameDevice));
+                }
+                if (lastCount / 15.0f == 1)
+                {
+                    sound.PlaySE("bomb");
+                    mediator.AddGameObject(new DeadEffect(position, -20, 50, gameDevice));
+                }
+                if (lastCount / 25.0f == 1)
+                {
+                    sound.PlaySE("bomb");
+                    mediator.AddGameObject(new DeadEffect(position, 120, 80, gameDevice));
+                }
+                if (lastCount / 35.0f == 1)
+                {
+                    sound.PlaySE("bomb");
+                    mediator.AddGameObject(new DeadEffect(position, 20, 30, gameDevice));
+                }
+                if (lastCount / 45.0f == 1)
+                {
+                    sound.PlaySE("bomb");
+                    mediator.AddGameObject(new DeadEffect(position, 0, 50, gameDevice));
+                }
+                if (lastCount / 75.0f == 1)
+                {
+                    isDeadFlag = true;
+                }
             }
-            if (dir == -1 && Charge == 1)
-            {
-                renderer.DrawTexture("BossLeft", position + gameDevice.GetDisplayModify(), new Vector2(2, 2),Color.Red);
-            }
-            if (dir == 1 && Charge == 0)
-            {
-                renderer.DrawTexture("BossRight", position + gameDevice.GetDisplayModify(), new Vector2(2, 2));
-            }
-            if (dir == 1 && Charge == 1)
-            {
-                renderer.DrawTexture("BossRight", position + gameDevice.GetDisplayModify(), new Vector2(2, 2), Color.Red);
-            }
-            gauge.Draw(renderer);
         }
     }
 }

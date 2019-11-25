@@ -14,37 +14,27 @@ namespace Game1.Scene
     class GameTitle : IScene
     {
         private bool isEndFlag;
-        //public Player player;
-        //public Boss boss;
-        //private GameDevice gameDevice;
-        //public Gauge Gauge;
-        //private int width;
+        private Sound sound;
+        private GameDevice gameDevice;
 
         public GameTitle()
         {
             isEndFlag = false;
-            //gameDevice = GameDevice.Instance();
-            //player = new Player(new Vector2(100, 100), gameDevice);
-            //boss = new Boss(new Vector2(400, 400), gameDevice);
-            //Rectangle bound = new Rectangle(100, 100, width, 50);
-            //width = 350;
-            //Gauge = new Gauge("gauge", "pixel", bound, 100, 100, width, Color.LightGreen);
+            gameDevice = GameDevice.Instance();
+            sound = gameDevice.GetSound();
         }
 
 
         public void Draw(Renderer renderer)
         {
             renderer.Begin();
-            //boss.Draw(renderer);
-            //player.Draw(renderer);
-            //Gauge.Draw(renderer);
             renderer.DrawTexture("Title", new Vector2());
             renderer.End();
         }
 
         public void Initialize()
         {
-            //boss.Initialize();
+            isEndFlag = false;
         }
 
         public bool IsEnd()
@@ -64,13 +54,11 @@ namespace Game1.Scene
 
         public void Update(GameTime gameTime)
         {
+            sound.PlayBGM("bgm_maoudamashii_neorock81");
             if (Input.GetKeyTrigger(Keys.Space))
             {
                 isEndFlag = true;
             }
-            //player.Update(gameTime);
-            //boss.Update(gameTime);
-            //Gauge.Update();
         }
     }
 }

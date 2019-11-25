@@ -44,9 +44,9 @@ namespace Game1.Actor
         {
         }
 
-        public void ThisHp(int hp)
+        public void ThisNum(int num)
         {
-            currentHp = hp;
+            currentHp = num;
         }
     }
 }

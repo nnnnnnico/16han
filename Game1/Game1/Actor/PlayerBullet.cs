@@ -18,26 +18,27 @@ namespace Game1.Actor
         private int _dir;
         private int count;
         private IGameMediator _mediator;
-        private float _widthD, _heightD;
+        private float widthD, heightD;
+        private float gravity;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="position"></param>
         /// <param name="gameDevice"></param>
-        public PlayerBullet(Vector2 position,float widthD,float heightD, int dir, GameDevice gameDevice, IGameMediator mediator)
-            : base("Bullet16", position, 16, 16, gameDevice)
+        public PlayerBullet(Vector2 position, int dir, GameDevice gameDevice, IGameMediator mediator)
+            : base("PBullet", position, 16, 16, gameDevice)
         {
             speed = 20.0f;
             count = 0;
             _dir = dir;
             _mediator = mediator;
-            _widthD = widthD;
-            _heightD = heightD;
+            widthD = 120;
+            heightD = 140;
         }
 
         public PlayerBullet(PlayerBullet other)
-            : this(other.position,other._widthD,other._heightD, other._dir, other.gameDevice,other._mediator)
+            : this(other.position,other._dir, other.gameDevice,other._mediator)
         {
 
         }
@@ -49,9 +50,11 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
+            gravity += 0.1f;
+
             //位置の計算
             position.X = position.X + speed * _dir;
-
+            position.Y += gravity;
 
             Destroy(1.0f);
         }
@@ -64,8 +67,8 @@ namespace Game1.Actor
             }
             if(other is Boss)
             {
-                _mediator.AddGameObject(new PBulletEffect(position,_widthD,_heightD, gameDevice));
                 isDeadFlag = true;
+                _mediator.AddGameObject(new PBulletEffect(position,widthD,heightD, gameDevice));
             }
         }
 

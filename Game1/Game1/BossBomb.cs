@@ -16,24 +16,28 @@ namespace Game1.Actor
         private float _speed;
         private int _dir;
         private int count;
-        private float gravity;
+        private float _gravity;
+        private float _plusGravity;
+        private IGameMediator _mediator;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="position"></param>
         /// <param name="gameDevice"></param>
-        public BossBomb(Vector2 position,float speed ,int dir, GameDevice gameDevice)
-            : base("Bullet16", position, 16, 16, gameDevice)
+        public BossBomb(Vector2 position,float speed, float plusGravity,int dir, GameDevice gameDevice,IGameMediator mediator)
+            : base("EBomb", position, 16, 16, gameDevice)
         {
             _speed = speed;
             count = 0;
             _dir = dir;
-            gravity = 2.0f;
+            _gravity = 2.0f;
+            _plusGravity = plusGravity;
+            _mediator = mediator;
         }
 
         public BossBomb(BossBomb other)
-            : this(other.position,other._speed, other._dir, other.gameDevice)
+            : this(other.position,other._speed,other._plusGravity, other._dir, other.gameDevice,other._mediator)
         {
 
         }
@@ -56,10 +60,12 @@ namespace Game1.Actor
             if (other is Block)
             {
                 isDeadFlag = true;
+                _mediator.AddGameObject(new BombEffect(position, gameDevice));
             }
             if (other is Player)
             {
-                //isDeadFlag = true;
+                _mediator.AddGameObject(new BombDirect(position, gameDevice));
+                isDeadFlag = true;
             }
         }
 
@@ -85,9 +91,14 @@ namespace Game1.Actor
         private void Shot()
         {
             position.X = position.X + _speed * _dir;
+            _speed -= 0.2f;
+            position.Y += _gravity;
+            _gravity += _plusGravity;
+        }
 
-            position.Y += gravity;
-            gravity += 0.2f;
+        public override void Draw(Renderer renderer)
+        {
+            renderer.DrawTexture(name, position + gameDevice.GetDisplayModify(), new Vector2(2.0f, 2.0f));
         }
     }
 }

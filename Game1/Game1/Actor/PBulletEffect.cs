@@ -75,7 +75,7 @@ namespace Game1.Actor
 
         public override void Draw(Renderer renderer)
         {
-            renderer.DrawTexture(name, new Vector2(_position.X - _widthD,_position.Y - _heightD), new Rectangle(count * 240,0,240,240));
+            renderer.DrawTexture(name, new Vector2(_position.X - _widthD,_position.Y - _heightD) + gameDevice.GetDisplayModify(), new Rectangle(count * 240,0,240,240));
         }
     }
 }

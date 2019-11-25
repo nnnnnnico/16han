@@ -30,12 +30,20 @@ namespace Game1.Actor
         private bool isShot;
         private int shotInterval;
         private int shotCount;
+        private int invisibleCount;
 
         public Gauge gauge;
+        public Gauge invisibleGauge;
 
+        public ScreenGray gray;
+        private float grayScale;
+        private float grayRotate;
+        private float grayAlpha;
 
         int hp;
         float alpha;
+
+        private Sound sound;
 
         public Player(Vector2 position,GameDevice gameDevice,IGameMediator mediator)
             :base("TankRight",position,64,64,gameDevice)
@@ -43,7 +51,7 @@ namespace Game1.Actor
             position = new Vector2(650, 128);
             this.mediator = mediator;
             velocity = Vector2.Zero;
-            hp = 100;
+            hp = 1000;
             gravity = 10;
             isGround = false;
             escape = false;
@@ -51,10 +59,21 @@ namespace Game1.Actor
             flashPlayer = false;
             right = 1;
             isShot = false;
-            
+            invisibleCount = 540;
 
-            Rectangle bound = new Rectangle(100, 100, 0, 50);
-            gauge = new Gauge("gauge", "pixel",0,700,bound, hp,hp, 350, Color.LightGreen);
+            Rectangle bound = new Rectangle(100, 100, 0, 40);
+            Rectangle invBound = new Rectangle(100, 100, 0, 20);
+            gauge = new Gauge("gauge", "pixel",0,660,bound, hp,hp, 350, Color.LightGreen);
+            invisibleGauge = new Gauge("gauge", "pixel", 0, 700, invBound, invisibleCount, invisibleCount,350, Color.LightBlue);
+
+
+            grayScale = 1.0f;
+            grayAlpha = 0.5f;
+            grayRotate = 0.0f;
+            gray = new ScreenGray(position, grayScale, grayAlpha, grayRotate);
+
+            gameDevice = GameDevice.Instance();
+            sound = gameDevice.GetSound();
         }
 
         public Player(Player other)
@@ -74,19 +93,34 @@ namespace Game1.Actor
             {
                 hitBlock(other);
             }
-            if(other is Boss)
+            if (!PlayerInvisibleMode.isInvisibleMode)
             {
-                if (!hitDirect)
+                if (other is Boss)
                 {
-                    hitDirect = true;
-                    hp -= 5;
+                    if (!escape)
+                    {
+                        if (!hitDirect)
+                        {
+                            sound.PlaySE("kick1");
+                            hitDirect = true;
+                            hp -= 50;
+                        }
+                    }
+                }
+                if (other is Bullet)
+                {
+                    sound.PlaySE("kick1");
+                    hp -= 30;
+                }
+                if (other is BossBomb)
+                {
+                    hp -= 80;
+                }
+                if (other is BombEffect)
+                {
+                    hp -= 1;
                 }
             }
-            if(other is Bullet)
-            {
-                hp -= 3;
-            }
-
         }
 
         public override void Initialize()
@@ -101,13 +135,15 @@ namespace Game1.Actor
 
         public override void Update(GameTime gameTime)
         {
-            gauge.ThisHp(hp);
+            gauge.ThisNum(hp);
+            invisibleGauge.ThisNum(invisibleCount);
             velocity = Input.Velocity() * speed;
 
             //位置の計算
-            position = position + velocity;
+            position.X = position.X + velocity.X;
             position.X = MathHelper.Clamp(position.X,0, mediator.MapSize().X - width);
 
+            Invisible();
             EscapeMove();
 
             SetDisplayModify();
@@ -157,15 +193,28 @@ namespace Game1.Actor
 
         private void EscapeMove()
         {
-            if(velocity.X >= 0&&Input.GetKeyTrigger(Keys.Z))
+            if (!PlayerInvisibleMode.isInvisibleMode)
             {
-                position.X += 150;
-            }
-            if (velocity.X <= 0 && Input.GetKeyTrigger(Keys.Z))
-            {
-                position.X -= 150;
+                if(invisibleCount <= 540)
+                {
+                    invisibleCount++;
+                }
+                return;
             }
 
+            invisibleCount -= 3;
+            if(invisibleCount <= 0)
+            {
+                PlayerInvisibleMode.isInvisibleMode = false;
+            }
+        }
+
+        private void Invisible()
+        {
+            if (Input.GetKeyTrigger(Keys.Z)&&invisibleCount >= 540)
+            {
+                PlayerInvisibleMode.isInvisibleMode = true;
+            }
         }
 
         private void hitBlock(Character gameObject)
@@ -220,6 +269,8 @@ namespace Game1.Actor
         {
             renderer.DrawTexture(name, position + gameDevice.GetDisplayModify(),Color.White * alpha);
             gauge.Draw(renderer);
+            invisibleGauge.Draw(renderer);
+            gray.Draw(renderer);
         }
 
         public void Flash()
@@ -257,28 +308,27 @@ namespace Game1.Actor
                 {
                     if (shotCount == 1 || shotCount == 2)
                     {
-                        mediator.AddGameObject(new PlayerBullet(new Vector2(position.X - 10, position.Y + 5),360,240, right, gameDevice, mediator));
-                        //mediator.AddGameObject(new BossBomb(new Vector2(position.X - 10, position.Y + 5),speed, right, gameDevice));
+                        sound.PlaySE("short_bomb");
+                        mediator.AddGameObject(new PlayerBullet(new Vector2(position.X - 10, position.Y + 5), right, gameDevice, mediator));
                     }
                     else if(shotCount == 3)
                     {
-                        mediator.AddGameObject(new PlayerFinalBullet(new Vector2(position.X - 10, position.Y + 5),360,240, right, gameDevice, mediator));
+                        sound.PlaySE("bomb");
+                        mediator.AddGameObject(new PlayerFinalBullet(new Vector2(position.X - 10, position.Y + 5),right, gameDevice, mediator));
                     }
                 }
 
                 else if(right == 1)
                 {
-                    //mediator.AddGameObject(new PlayerBullet(new Vector2(position.X + width, position.Y + 6), right, gameDevice, mediator));
-                    //mediator.AddGameObject(new BossBomb(new Vector2(position.X + width, position.Y + 6),speed * 2, right, gameDevice));
-
                     if (shotCount == 1 || shotCount == 2)
                     {
-                        mediator.AddGameObject(new PlayerBullet(new Vector2(position.X + width, position.Y + 6),120,240, right, gameDevice, mediator));
-                        //mediator.AddGameObject(new BossBomb(new Vector2(position.X + width, position.Y + 6),speed , right, gameDevice));
+                        sound.PlaySE("short_bomb");
+                        mediator.AddGameObject(new PlayerBullet(new Vector2(position.X + width, position.Y + 6), right, gameDevice, mediator));
                     }
                     else if (shotCount == 3)
                     {
-                        mediator.AddGameObject(new PlayerFinalBullet(new Vector2(position.X +width, position.Y + 6),120,240, right, gameDevice, mediator));
+                        sound.PlaySE("bomb");
+                        mediator.AddGameObject(new PlayerFinalBullet(new Vector2(position.X +width, position.Y + 6),right, gameDevice, mediator));
                     }
                 }
             }
@@ -288,6 +338,12 @@ namespace Game1.Actor
                 shotCount = 0;
                 isShot = false;
             }
+        }
+
+        private void Gray()
+        {
+            grayScale += 1.0f;
+
         }
     }
 }

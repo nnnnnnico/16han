@@ -5,11 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Game1.Device;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Game1.Scene
 {
     class GameEnding : IScene
     {
+        private bool isEndFlag;
+        private Sound sound;
+        private GameDevice gameDevice;
+
+        public GameEnding()
+        {
+            isEndFlag = false;
+            gameDevice = GameDevice.Instance();
+            sound = gameDevice.GetSound();
+        }
+
         public void Draw(Renderer renderer)
         {
             renderer.Begin();
@@ -19,27 +31,30 @@ namespace Game1.Scene
 
         public void Initialize()
         {
-            throw new NotImplementedException();
+            isEndFlag = false;
         }
 
         public bool IsEnd()
         {
-            throw new NotImplementedException();
+            return isEndFlag;
         }
 
         public SceneName Next()
         {
-            throw new NotImplementedException();
+            return SceneName.GameTitle;
         }
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
         }
 
         public void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            sound.PlayBGM("bgm_maoudamashii_healing17");
+            if (Input.GetKeyTrigger(Keys.Space))
+            {
+                isEndFlag = true;
+            }
         }
     }
 }

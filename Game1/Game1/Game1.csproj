@@ -42,10 +42,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Actor\Block.cs" />
+    <Compile Include="Actor\BombEffect.cs" />
     <Compile Include="Actor\Boss.cs" />
     <Compile Include="Actor\Bullet.cs" />
+    <Compile Include="Actor\BombDirect.cs" />
     <Compile Include="Actor\Character.cs" />
     <Compile Include="Actor\CharacterManager.cs" />
+    <Compile Include="Actor\DeadEffect.cs" />
     <Compile Include="Actor\Gauge.cs" />
     <Compile Include="Actor\Map.cs" />
     <Compile Include="Actor\PBulletEffect.cs" />
@@ -53,6 +56,7 @@
     <Compile Include="Actor\Player.cs" />
     <Compile Include="Actor\PlayerBullet.cs" />
     <Compile Include="Actor\PlayerFinalBullet.cs" />
+    <Compile Include="Actor\ScreenGray.cs" />
     <Compile Include="Actor\Space.cs" />
     <Compile Include="BossBomb.cs" />
     <Compile Include="Def\Screen.cs" />
@@ -78,6 +82,7 @@
     <Compile Include="Scene\SELoader.cs" />
     <Compile Include="Scene\TextureLoader.cs" />
     <Compile Include="Static\NowCurrentScene.cs" />
+    <Compile Include="Static\PlayerInvisibleMode.cs" />
     <Compile Include="Util\CountDownTimer.cs" />
     <Compile Include="Util\GameObjectCSVParser.cs" />
     <Compile Include="Util\Motion.cs" />

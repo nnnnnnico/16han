@@ -174,6 +174,13 @@ namespace Game1.Actor
             return (find == null || find.IsDead());
         }
 
+        public bool IsBossDead()
+        {
+            Character find = gameObjectList.Find(C => C is Boss);
+
+            return (find == null || find.IsDead());
+        }
+
         //public Character GetGameObject(GameObjectID id)
         //{
         //    GameObject find = gameObjectList.Find(c => c.GetID() == id);
