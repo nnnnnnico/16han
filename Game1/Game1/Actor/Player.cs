@@ -254,12 +254,33 @@ namespace Game1.Actor
                 shotCount++;
                 shotInterval = 0;
                 if (right == -1)
-                    mediator.AddGameObject(new PlayerBullet(new Vector2(position.X - 10, position.Y + 5), right, gameDevice));
-                    //mediator.AddGameObject(new BossBomb(new Vector2(position.X - 10, position.Y + 5),speed, right, gameDevice));
+                {
+                    if (shotCount == 1 || shotCount == 2)
+                    {
+                        mediator.AddGameObject(new PlayerBullet(new Vector2(position.X - 10, position.Y + 5),360,240, right, gameDevice, mediator));
+                        //mediator.AddGameObject(new BossBomb(new Vector2(position.X - 10, position.Y + 5),speed, right, gameDevice));
+                    }
+                    else if(shotCount == 3)
+                    {
+                        mediator.AddGameObject(new PlayerFinalBullet(new Vector2(position.X - 10, position.Y + 5),360,240, right, gameDevice, mediator));
+                    }
+                }
 
-                else
-                    mediator.AddGameObject(new PlayerBullet(new Vector2(position.X + width, position.Y + 6), right, gameDevice));
+                else if(right == 1)
+                {
+                    //mediator.AddGameObject(new PlayerBullet(new Vector2(position.X + width, position.Y + 6), right, gameDevice, mediator));
                     //mediator.AddGameObject(new BossBomb(new Vector2(position.X + width, position.Y + 6),speed * 2, right, gameDevice));
+
+                    if (shotCount == 1 || shotCount == 2)
+                    {
+                        mediator.AddGameObject(new PlayerBullet(new Vector2(position.X + width, position.Y + 6),120,240, right, gameDevice, mediator));
+                        //mediator.AddGameObject(new BossBomb(new Vector2(position.X + width, position.Y + 6),speed , right, gameDevice));
+                    }
+                    else if (shotCount == 3)
+                    {
+                        mediator.AddGameObject(new PlayerFinalBullet(new Vector2(position.X +width, position.Y + 6),120,240, right, gameDevice, mediator));
+                    }
+                }
             }
 
             if (shotCount == 3)

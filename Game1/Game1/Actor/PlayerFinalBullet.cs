@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Game1.Actor
 {
-    class PlayerBullet : Character
+    class PlayerFinalBullet : Character
     {
         private Vector2 vector2;
         Vector2 velocity;
@@ -25,7 +25,7 @@ namespace Game1.Actor
         /// </summary>
         /// <param name="position"></param>
         /// <param name="gameDevice"></param>
-        public PlayerBullet(Vector2 position,float widthD,float heightD, int dir, GameDevice gameDevice, IGameMediator mediator)
+        public PlayerFinalBullet(Vector2 position,float widthD,float heightD, int dir, GameDevice gameDevice, IGameMediator mediator)
             : base("Bullet16", position, 16, 16, gameDevice)
         {
             speed = 20.0f;
@@ -36,15 +36,15 @@ namespace Game1.Actor
             _heightD = heightD;
         }
 
-        public PlayerBullet(PlayerBullet other)
-            : this(other.position,other._widthD,other._heightD, other._dir, other.gameDevice,other._mediator)
+        public PlayerFinalBullet(PlayerFinalBullet other)
+            : this(other.position,other._widthD,other._heightD, other._dir, other.gameDevice, other._mediator)
         {
 
         }
 
         public override object Clone()
         {
-            return new PlayerBullet(this);
+            return new PlayerFinalBullet(this);
         }
 
         public override void Update(GameTime gameTime)
@@ -62,9 +62,9 @@ namespace Game1.Actor
             {
                 isDeadFlag = true;
             }
-            if(other is Boss)
+            if (other is Boss)
             {
-                _mediator.AddGameObject(new PBulletEffect(position,_widthD,_heightD, gameDevice));
+                _mediator.AddGameObject(new PFinalBulletEffect(position,_widthD,_heightD, gameDevice));
                 isDeadFlag = true;
             }
         }
