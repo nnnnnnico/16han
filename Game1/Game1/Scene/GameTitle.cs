@@ -38,6 +38,7 @@ namespace Game1.Scene
             //boss.Draw(renderer);
             //player.Draw(renderer);
             //Gauge.Draw(renderer);
+            renderer.DrawTexture("Title", new Vector2());
             renderer.End();
         }
 

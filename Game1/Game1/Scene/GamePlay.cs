@@ -28,6 +28,7 @@ namespace Game1.Scene
         public void Draw(Renderer renderer)
         {
             renderer.Begin();
+            renderer.DrawTexture("bg2", new Vector2());
             map.Draw(renderer);
             characterManager.Draw(renderer);
             renderer.End();
