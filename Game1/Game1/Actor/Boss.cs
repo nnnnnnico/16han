@@ -228,17 +228,17 @@ namespace Game1.Actor
         {
             time += 1;
             int a = time % 30;
-            int b = time % 30;
+            int b = time % 60;
             int c = time % 90;
             if (c == 0)
             {
-                count = rnd.Next(5);
+                count = rnd.Next(6);
             }
             //foreach (var bullet in bulletList)
             //{
             //    bullet.Update(gameTime);
             //}
-            if (count == 0)
+            if (count == 0||count==2)
             {
                 Charge = 0;
                 if (a == 0)
@@ -254,10 +254,10 @@ namespace Game1.Actor
                     count = 1;
                 }
             }
-            if (count == 1)
+            if (count == 1 ||count==3)
             {
                 Charge = 0;
-                if (b == 0)
+                if (b == 1)
                 {
                     Attack2();
                 }
@@ -270,7 +270,7 @@ namespace Game1.Actor
                     count = 0;
                 }
             }
-            if (count == 2)
+            if (count == 4)
             {
                 if (position.X <= 1280 - 128 * 2)
                 {
@@ -285,9 +285,9 @@ namespace Game1.Actor
                     count = 1;
                 }
             }
-            if (count == 3)
+            if (count == 5)
             {
-                if (position.X >= 0)
+                if (position.X <= 100)
                 {
                     Charge = 1;
                     if (Charge == 1)

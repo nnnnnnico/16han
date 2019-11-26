@@ -688,18 +688,6 @@
 /processorParam:TextureFormat=Color
 /build:Texture/Ending.png
 
-#begin Texture/Title.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Texture/Title.png
-
 #begin Texture/EBomb.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -789,4 +777,16 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Sound/bgm_maoudamashii_healing17.mp3
+
+#begin Texture/Title.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Texture/Title.png
 
